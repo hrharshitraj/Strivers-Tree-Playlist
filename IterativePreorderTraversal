@@ -1,0 +1,68 @@
+// Lecture 9, Strivers Tree Playlist-
+
+class Node {
+    int data;
+    Node left;
+    Node right;
+    
+    Node(int d) {
+        data = d;
+        left = right = null;
+    }
+}
+
+public class Main {
+    private static List<Integer> iterPreOrder(Node root, List<Integer> list) {
+        Stack<Node> stack = new Stack();
+        stack.add(root);
+        
+        // Put the root node of the tree in the stack, print the peek(top) node of the stack, then take it out;
+        // First put curr.right node in the stack then put curr.left. Since, Stack is LIFO data structure, whatever node needs to be traversed before needs to be put at the last, so that it could be popped first;
+        while(stack.size()>0) {
+            Node curr = stack.pop();
+            list.add(curr.data);
+            if(curr.right!=null) stack.add(curr.right);
+            if(curr.left!=null) stack.add(curr.left);
+        }
+        return list;
+    }
+    
+    /*
+    // In this solution, by adding current node to your list, you keep going to the left side of the tree;
+    // Once you reach at the extreme left, you pop that node, then go to right side of the just above node, then again do the same until stack size is not 0;
+    public List<Integer> preorderTraversal(TreeNode root) {
+        Stack<TreeNode> stack = new Stack<>();
+        List<Integer> res = new ArrayList<>();
+        
+        while(root!=null || !stack.isEmpty()){
+            while(root!=null){
+                res.add(root.val);
+                stack.add(root);
+                root = root.left;    
+            }
+            
+            if(stack.isEmpty()){
+                return res;
+            }
+            
+            root = stack.pop();
+            root = root.right;
+        }
+        return res;
+    }
+    */
+    
+    public static void main(String[] args) {
+        Node root = new Node(1);
+        root.left = new Node(2);
+        root.right = new Node(7);
+        root.left.left = new Node(3);
+        root.left.right = new Node(4);
+        root.left.right.left = new Node(5);
+        root.left.right.right = new Node(6);
+        
+        List<Integer> list = new ArrayList();
+        iterPreOrder(root,list);
+        System.out.print(list);
+    }
+}
