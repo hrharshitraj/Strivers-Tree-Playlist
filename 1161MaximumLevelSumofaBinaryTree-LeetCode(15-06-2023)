@@ -1,0 +1,71 @@
+/*
+Hint-
+(1/4)
+Calculate the sum for each level then find the level with the maximum sum.
+(2/4)
+How can you traverse the tree?
+(3/4)
+How can you sum up the values for every level?
+(4/4)
+Use DFS or BFS to traverse the tree keeping the level of each node, and sum up those values with a map or a frequency array.
+*/
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    private int levelSum(TreeNode root) {
+        Queue<TreeNode> q = new LinkedList();   // By using Queue, we can access all the nodes of a level at once as it polls(pops) the first entered node first; 
+        q.add(root);
+        int maxSum = Integer.MIN_VALUE;    // Don't store maxSum=0, all the nodes might be -ve, so maxSum can be negative as well;
+        int level = 1;
+        int ans = 0;
+        
+        while(q.isEmpty()==false) {
+            int currLen = q.size();
+            int sum = 0;
+            
+            // If we hadn't use loop, sum of current level couldn't be stored at the same time;
+            for(int i=0; i<currLen; i++) {    // You can acces all the nodes at the current level, so that you can add their values and add their left and right nodes into the queue(if possible) so that their sum can also be added at next level;
+                TreeNode curr = q.poll();
+                sum += curr.val;    // Keep adding the values of the nodes present at same level;
+                
+                if(curr.left!=null) {
+                    q.add(curr.left);
+                }
+                if(curr.right!=null) {
+                    q.add(curr.right);
+                }
+            }
+            if(sum>maxSum) {
+                maxSum = sum;
+                ans = level;
+            }
+            level++;
+        }
+        return ans;
+    }
+
+    public int maxLevelSum(TreeNode root) {
+        int max = levelSum(root);
+        return max;
+    }
+}
+
+Related Topics-
+Tree
+Depth-First Search
+Breadth-First Search
+Binary Tree
