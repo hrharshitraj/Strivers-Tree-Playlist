@@ -1,0 +1,60 @@
+// Strivers Tree playlist;
+// Lecture-10;
+// https://www.youtube.com/watch?v=lxTGsVXjwvM&list=PLgUwDviBIf0q8Hkd7bK2Bpryj2xVJk8Vk
+
+class Node {
+    int data;
+    Node left;
+    Node right;
+    
+    Node(int d) {
+        data = d;
+        left = right = null;
+    }
+}
+
+public class Main {
+    /*
+    Go to extreme left by adding each node you get while traversing;
+    Once you reach at null, pop from stack, that would be the left node, then go back to that node, if it has right node, go there otherwise, if it's null, pop the current stack's topmost node; 
+    First keep traversing to left, the moment you pop the node, then you have to traverse towards right nodes of them;
+    Keep doing this until stack has even one node in it;
+    */
+    private static void iterateInOrder(Node root) {
+        Stack<Node> stack = new Stack();
+        Node curr = root;
+        
+        while(true) {
+            if(curr!=null) {
+                stack.add(curr);
+                curr = curr.left;
+            }
+            else {
+                if(stack.isEmpty()) break;
+                curr = stack.pop();
+                System.out.print(curr.data + " ");
+                curr = curr.right;
+            }
+        }
+    }
+    
+    private static void recInOrder(Node root) {
+        if(root!=null) {
+            recInOrder(root.left);
+            System.out.print(root.data + " ");
+            recInOrder(root.right);
+        }
+    }
+    
+    public static void main(String[] args) {
+        Node root = new Node(1);
+        root.left = new Node(2);
+        root.right = new Node(3);
+        root.left.left = new Node(4);
+        root.left.right = new Node(5);
+        root.left.right.left = new Node(6);
+        root.left.right.right = new Node(7);
+        
+        iterateInOrder(root);
+    }
+}
