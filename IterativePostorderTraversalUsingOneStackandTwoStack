@@ -1,0 +1,96 @@
+class Node {
+    int data;
+    Node left;
+    Node right;
+    
+    Node(int d) {
+        data = d;
+        left = right = null;
+    }
+}
+
+public class Main {
+    /* Put root in st1, pop it out(curr Node), put it in st2;
+    Now, if curr(popped node) has left child, put that it st1;
+    If curr has right child, put that it st1;
+    Keep doing until st1 is not empty;
+    Now, Postorder traversal node has been stored in st2 form top to bottom order, so starting popping them until st2 is not empty;
+    */
+    private static List<Integer> iterPostOrderTwoStack(Node root) {
+        Stack<Node> st1 = new Stack();
+        Stack<Node> st2 = new Stack();
+        
+        st1.add(root);
+        while(st1.size()>0) {
+            Node curr = st1.pop();
+            st2.add(curr);
+            if(curr.left!=null) st1.add(curr.left);
+            if(curr.right!=null) st1.add(curr.right);
+        }
+        
+        List<Integer> list = new ArrayList();
+        while(st2.size()>0) {
+            list.add(st2.pop().data);
+        }
+        return list;
+    }
+    
+    private static void recPostOrder(Node root) {
+        if(root!=null) {
+            recPostOrder(root.left);
+            recPostOrder(root.right);
+            System.out.print(root.data + " ");
+        }
+    }
+    
+    // Full Explanation -> Page 25, Tree;
+    private static List<Integer> iterPostOrderOneStack(Node root) {
+        List<Integer> postorder = new ArrayList();
+        Stack<Node> st = new Stack();
+        Node curr = root;
+        
+        while(curr!=null || st.size()>0) {    // Stack size is 0 initially, that's why || curr!=null condition is must;
+            if(curr!=null) {     // Go to the extreme left, keep pushing the current node into the stack;
+                st.push(curr);
+                curr = curr.left;
+            }
+            else {   // Once you react at null, now go to right if possible;
+                Node temp = st.peek();   
+                temp = temp.right;
+                
+                if(temp==null) {
+                    temp = st.pop();
+                    postorder.add(temp.data);
+                    
+                    while(st.size()>0 && temp==st.peek().right) {
+                        temp = st.pop();
+                        postorder.add(temp.data);
+                    }
+                }
+                else curr = temp;
+            }
+        }
+        return postorder;
+    }
+    
+    public static void main(String[] args) {
+        Node root = new Node(1);
+        root.left = new Node(2);
+        root.right = new Node(7);
+        root.left.left = new Node(3);
+        root.right.left = new Node(8);
+        root.right.right = new Node(9);
+        root.left.left.right = new Node(4);
+        root.right.right.right = new Node(10);
+        root.left.left.right.right = new Node(5);
+        root.left.left.right.right.left = new Node(11);
+        root.left.left.right.right.right = new Node(6);
+        
+        
+        // recPostOrder(root);
+        List<Integer> list = new ArrayList();
+        // list = iterPostOrderTwoStack(root);
+        list = iterPostOrderOneStack(root);
+        System.out.print(list);
+    }
+}
