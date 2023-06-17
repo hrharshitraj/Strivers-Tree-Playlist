@@ -1,0 +1,71 @@
+import java.util.*;
+
+class Node {
+    int data;
+    Node left;
+    Node right;
+    Node(int d) {
+        data = d;
+    }
+}
+// Similar to class Node(Node has left,right and data), Pair class has a node and a num for stack to keep node and num(1,2,3);
+// Required because, num is needed to be stored to know about where to add the current node;
+class Pair {
+    Node node;
+    int num;
+    Pair(Node n, int val) {
+        num = val;
+        node = n;
+    }
+}
+
+public class Main {
+    private static void preInPost(Node root) {
+        Stack<Pair> st = new Stack();     // Stack's data type here is Pair(Not only Node, it'll be storing Node and num);
+        st.push(new Pair(root,1));    // Push(root with value 1 to start);
+        List<Integer> pre = new ArrayList();
+        List<Integer> in = new ArrayList();
+        List<Integer> post = new ArrayList();
+        if(root==null) return;
+        
+        while(st.size()>0) {
+            Pair curr = st.pop();
+            if(curr.num==1) {    // If num=1, add the node to pre as node is placed at first in preorder;
+                pre.add(curr.node.data);
+                curr.num++;    // Increment num by 1, so that if next time the node comes, it could be added to in as root node comes after left node in inorder; 
+                st.push(curr);
+                
+                if(curr.node.left != null) {
+                    st.push(new Pair(curr.node.left,1));   // Add the node to stack with num as 1, as the node is iterated first time;
+                }
+            }
+            else if(curr.num==2) {
+                in.add(curr.node.data);
+                curr.num++;
+                st.push(curr);
+                
+                if(curr.node.right != null) {
+                    st.push(new Pair(curr.node.right,1));   // Add the node to stack with num as 1, as the node is iterated first time;
+                }
+            }
+            else {
+                post.add(curr.node.data);   // If num=3, pre,in has been added, just add the node to post and the node is done;
+            }
+        }
+        System.out.println(pre);
+        System.out.println(in);
+        System.out.println(post);
+    }
+    
+    public static void main(String[] args) {
+        Node root = new Node(1);
+        root.left = new Node(2);
+        root.right = new Node(5);
+        root.left.left = new Node(3);
+        root.left.right = new Node(4);
+        root.right.left = new Node(6);
+        root.right.right = new Node(7);
+        
+        preInPost(root);
+    }
+}
